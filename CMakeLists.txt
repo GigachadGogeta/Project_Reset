@@ -40,6 +40,9 @@ endif()
 
 set(SOURCE_FILES
     src/main.cpp
+    src/app.cpp
+    src/window.cpp
+    src/device.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
