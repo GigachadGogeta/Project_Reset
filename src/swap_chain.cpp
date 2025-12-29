@@ -7,23 +7,27 @@
 
 namespace engine {
 
-SwapChain::SwapChain(Device &deviceRef, VkExtent2D extent) : 
-        device{deviceRef}, windowExtent{extent} {
+SwapChain::SwapChain(Device &deviceRef, VkExtent2D windowExtent) : 
+        device{deviceRef}, windowExtent{windowExtent} {
     init();
 }
 
-SwapChain::SwapChain(Device &deviceRef, VkExtent2D extent, std::shared_ptr<SwapChain> previous) : 
-        device{deviceRef}, windowExtent{extent}, oldSwapChain{previous} {
+SwapChain::SwapChain(Device &deviceRef, VkExtent2D windowExtent, std::shared_ptr<SwapChain> previous) : 
+        device{deviceRef}, windowExtent{windowExtent}, oldSwapChain{previous} {
     init();
     oldSwapChain = nullptr;
 }
 
 void SwapChain::init() {
     createSwapChain();
+    createImageViews();
 }
 
 SwapChain::~SwapChain() {
-
+    for (VkImageView imageView : swapChainImageViews) {
+        vkDestroyImageView(device.getLogicalDevice(), imageView, nullptr);
+    }
+    swapChainImageViews.clear(); // might be needed?
 
     if (swapChain != nullptr) {
         vkDestroySwapchainKHR(device.getLogicalDevice(), swapChain, nullptr);
@@ -74,8 +78,15 @@ void SwapChain::createSwapChain() {
     createInfo.oldSwapchain = VK_NULL_HANDLE; // TODO when implementing resizing window 
 
     if (vkCreateSwapchainKHR(device.getLogicalDevice(), &createInfo, nullptr, &swapChain) != VK_SUCCESS) {
-        throw std::runtime_error("failed to create swap chain!");
+        throw std::runtime_error("Failed to create swap chain!");
     }
+
+    vkGetSwapchainImagesKHR(device.getLogicalDevice(), swapChain, &imageCount, nullptr);
+    swapChainImages.resize(imageCount);
+    vkGetSwapchainImagesKHR(device.getLogicalDevice(), swapChain, &imageCount, swapChainImages.data());
+
+    swapChainImageFormat = surfaceFormat.format;
+    swapChainExtent = extent;
 }
 
 VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats) {
@@ -114,6 +125,33 @@ VkExtent2D SwapChain::chooseSwapExtent(const VkSurfaceCapabilitiesKHR& capabilit
         );
 
         return actualExtent;
+    }
+}
+
+void SwapChain::createImageViews() {
+    swapChainImageViews.resize(swapChainImages.size());
+    for (size_t i = 0; i < swapChainImages.size(); ++i) {
+        VkImageViewCreateInfo createInfo{};
+        createInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+        createInfo.image = swapChainImages[i];
+
+        createInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+        createInfo.format = swapChainImageFormat;
+
+        createInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+        createInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+        
+        createInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+        createInfo.subresourceRange.baseMipLevel = 0;
+        createInfo.subresourceRange.levelCount = 1;
+        createInfo.subresourceRange.baseArrayLayer = 0;
+        createInfo.subresourceRange.layerCount = 1;
+
+        if (vkCreateImageView(device.getLogicalDevice(), &createInfo, nullptr, &swapChainImageViews[i]) != VK_SUCCESS) {
+            throw std::runtime_error("Failed to create image views!");
+        }
     }
 }
 
