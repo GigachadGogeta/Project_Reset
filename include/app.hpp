@@ -1,9 +1,11 @@
 #ifndef __APP_HPP__
 #define __APP_HPP__
 
+#include <swap_chain.hpp>
 #include <window.hpp>
 #include <device.hpp>
 
+#include <memory>
 #include <cstdint>
 
 namespace engine{
@@ -21,11 +23,13 @@ public:
 
     void run();
 private:
-    void initVulkan(); // placeholder that might be removed if pipeline components can be objectized
     void mainLoop();
 
+    void recreateSwapChain();
+
     Window window{WIDTH, HEIGHT, "Hello Vulkan Window"};
-    Device device{};
+    Device device{window};
+    std::unique_ptr<SwapChain> swapChain;
 };
 
 } // namespace engine

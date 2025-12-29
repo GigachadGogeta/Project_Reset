@@ -43,6 +43,7 @@ set(SOURCE_FILES
     src/app.cpp
     src/window.cpp
     src/device.cpp
+    src/swap_chain.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
