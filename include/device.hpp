@@ -40,6 +40,7 @@ public:
     ~Device();
 
     // Not copyable or movable
+    Device() = delete;
     Device(const Device&) = delete;
     Device& operator=(const Device&) = delete;
     Device(Device&&) = delete;
@@ -52,6 +53,7 @@ public:
 
     SwapChainSupportDetails getSwapChainSupport() { return querySwapChainSupport(physicalDevice); }
     QueueFamilyIndices findPhysicalQueueFamilies() { return findQueueFamilies(physicalDevice); }
+    VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 private:
     void createInstance();
     void setupDebugMessenger();

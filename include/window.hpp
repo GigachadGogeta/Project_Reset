@@ -14,6 +14,7 @@ public:
     Window(uint32_t w, uint32_t h, std::string name);
     ~Window();
 
+    // Not copyable
     Window() = delete;
     Window(const Window&) = delete;
     Window& operator=(const Window&) = delete;

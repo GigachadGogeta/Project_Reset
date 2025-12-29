@@ -44,6 +44,7 @@ set(SOURCE_FILES
     src/window.cpp
     src/device.cpp
     src/swap_chain.cpp
+    src/pipeline.cpp
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
