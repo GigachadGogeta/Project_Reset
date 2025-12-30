@@ -46,6 +46,7 @@ public:
     Device(Device&&) = delete;
     Device& operator=(Device&&) = delete;
 
+    VkCommandPool getCommandPool() { return commandPool; }
     VkDevice getLogicalDevice() { return logicalDevice; }
     VkSurfaceKHR getSurface() { return surface; }
     VkQueue getGraphicsQueue() { return graphicsQueue; }
@@ -60,6 +61,7 @@ private:
     void createSurface();
     void pickPhysicalDevice();
     void createLogicalDevice();
+    void createCommandPool();
 
     // Helper functions
     bool isDeviceSuitable (VkPhysicalDevice device);
@@ -75,6 +77,7 @@ private:
     VkDebugUtilsMessengerEXT debugMessenger;
     VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
     Window& window;
+    VkCommandPool commandPool;
     
     VkDevice logicalDevice; 
     VkSurfaceKHR surface;

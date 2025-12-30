@@ -4,7 +4,7 @@ project (Minecraft
     LANGUAGES CXX
 )
 
-set(CXX_STANDARD 20)
+set(CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -47,6 +47,12 @@ set(SOURCE_FILES
     src/pipeline.cpp
 )
 
+set(INCLUDE_DIRECTORIES
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_include_directories(${PROJECT_NAME} PUBLIC include)
+target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
 target_link_libraries(${PROJECT_NAME} glm glfw Vulkan::Vulkan)
+
+target_compile_options(${PROJECT_NAME} PUBLIC -std=c++17)

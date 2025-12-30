@@ -38,6 +38,8 @@ public:
     Pipeline& operator=(const Pipeline&) = delete;
 
     static void defaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
+
+    VkPipeline getGraphicsPipeline() { return graphicsPipeline; }
 private:
     static std::vector<char> readFile(const std::string& filepath);
 

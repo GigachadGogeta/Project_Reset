@@ -23,12 +23,19 @@ public:
 
     VkExtent2D getExtent() { return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)}; }
 
+    bool wasWindowResized() {return framebufferResized;}
+    void resetWindowResizedFlag() {framebufferResized = false;}
+
     void createSurface(VkInstance& instance, VkSurfaceKHR& surface);
 private:
+    static void framebufferResizedCallback(GLFWwindow *glfwWindow, int width, int height);
+
     void initWindow();
     
     uint32_t width;
     uint32_t height;
+
+    bool framebufferResized = false;
     
     std::string windowName;
     GLFWwindow* window;

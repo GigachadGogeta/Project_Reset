@@ -12,6 +12,8 @@ namespace engine {
 
 class SwapChain {
 public:
+    static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
+
     SwapChain(Device &deviceRef, VkExtent2D windowExtent);
     SwapChain(Device &deviceRef, VkExtent2D windowExtent, std::shared_ptr<SwapChain> previous);
     ~SwapChain();
@@ -21,6 +23,7 @@ public:
     SwapChain(const SwapChain&) = delete;
     SwapChain& operator=(const SwapChain&) = delete;
 
+    size_t getCurrentFrame() { return currentFrame; }
     VkFramebuffer getFrameBuffer(int index) { return swapChainFramebuffers[index]; }
     VkRenderPass getRenderPass() { return renderPass; }
     VkImageView getImageView(int index) { return swapChainImageViews[index]; }
@@ -41,8 +44,10 @@ private:
     void init();
     void createSwapChain();
     void createImageViews();
-    // createDepthResources
+    void createDepthResources();
     void createRenderPass();
+    void createFramebuffers();
+    void createSyncObjects();
 
     // Helper functions
     VkSurfaceFormatKHR chooseSwapSurfaceFormat(const std::vector<VkSurfaceFormatKHR>& availableFormats);

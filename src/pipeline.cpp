@@ -8,6 +8,7 @@
 #include <fstream>
 #include <iostream>
 #include <cassert>
+#include <filesystem>
 
 namespace engine {
 
@@ -25,9 +26,9 @@ Pipeline::~Pipeline() {
 
 std::vector<char> Pipeline::readFile(const std::string& filepath) {
     std::ifstream file(filepath, std::ios::ate | std::ios::binary);
-
+    
     if (!file.is_open()) {
-        throw std::runtime_error("Failed to open file: " + filepath + "\tReason: " + std::strerror(errno));
+        throw std::runtime_error("Failed to open file: " + filepath + "\tReason: " + std::strerror(errno) + "\nCurrent working directory path: " + std::filesystem::current_path().string());
     }
 
     size_t fileSize = static_cast<size_t>(file.tellg());
@@ -186,3 +187,6 @@ void Pipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo) {
 }
 
 } // namespace engine
+
+// debug
+#undef _CRT_SECURE_NO_WARNINGS
