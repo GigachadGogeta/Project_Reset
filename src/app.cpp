@@ -129,8 +129,8 @@ void App::createPipeline() {
     pipelineConfig.pipelineLayout = pipelineLayout;
     pipeline = std::make_unique<Pipeline>(
         device, 
-        "../../../shaders/shader.vert.spv", 
-        "../../../shaders/shader.frag.spv", 
+        "shaders/shader.vert.spv", 
+        "shaders/shader.frag.spv", 
         pipelineConfig
     );
 }

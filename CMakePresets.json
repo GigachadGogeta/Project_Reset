@@ -2,13 +2,13 @@
     "version": 8,
     "configurePresets": [
         {
-            "name": "Game_Clang",
+            "name": "Clang_Compiled",
             "displayName": "Clang 21.1.6 x86_64-pc-windows-msvc",
             "description": "Using compilers: C = C:\\Program Files\\LLVM\\bin\\clang.exe, CXX = C:\\Program Files\\LLVM\\bin\\clang++.exe",
-            "binaryDir": "${sourceDir}/out/build/${presetName}",
+            "binaryDir": "${sourceDir}/out/build",
             "generator": "Ninja",
             "cacheVariables": {
-                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install/${presetName}",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/out/install",
                 "CMAKE_C_COMPILER": "C:/Program Files/LLVM/bin/clang.exe",
                 "CMAKE_CXX_COMPILER": "C:/Program Files/LLVM/bin/clang++.exe",
                 "CMAKE_BUILD_TYPE": "Debug"

@@ -38,6 +38,15 @@ if(Vulkan_FOUND)
     link_directories(${Vulkan_LIBRARY_DIRS})
 endif()
 
+find_package(Threads)
+
+set(LIBRARIES
+    glm 
+    glfw 
+    Vulkan::Vulkan 
+    Threads::Threads
+)
+
 set(SOURCE_FILES
     src/main.cpp
     src/app.cpp
@@ -52,7 +61,27 @@ set(INCLUDE_DIRECTORIES
 )
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
-target_link_libraries(${PROJECT_NAME} glm glfw Vulkan::Vulkan)
-
 target_compile_options(${PROJECT_NAME} PUBLIC -std=c++17)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE_DIRECTORIES})
+target_link_libraries(${PROJECT_NAME} PUBLIC ${LIBRARIES})
+
+set(SHADERS_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/shaders")
+set(SHADERS_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/shaders")
+
+add_custom_command(
+    TARGET ${PROJECT_NAME} # Replace 'your_target_name' with your actual executable/library name
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${SHADERS_SOURCE_DIR}"
+    "${SHADERS_DEST_DIR}"
+    COMMENT "Copying 'shaders' to build directory"
+)
+
+### For distribution
+install(TARGETS ${PROJECT_NAME}
+    RUNTIME DESTINATION bin
+)
+install(DIRECTORY
+    ${CMAKE_SOURCE_DIR}/shaders/ DESTINATION bin/shaders
+)
