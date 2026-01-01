@@ -1,21 +1,27 @@
 [
 {
   "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
-  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\main.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\main.cpp",
-  "file": "C:/Users/xing5/projects/Project_Reset/src/main.cpp",
-  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/main.cpp.obj"
-},
-{
-  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
   "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\app.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\app.cpp",
   "file": "C:/Users/xing5/projects/Project_Reset/src/app.cpp",
   "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/app.cpp.obj"
 },
 {
   "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
-  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\window.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\window.cpp",
-  "file": "C:/Users/xing5/projects/Project_Reset/src/window.cpp",
-  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/window.cpp.obj"
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\buffer.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\buffer.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/buffer.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/buffer.cpp.obj"
+},
+{
+  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\camera.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\camera.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/camera.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/camera.cpp.obj"
+},
+{
+  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\descriptors.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\descriptors.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/descriptors.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/descriptors.cpp.obj"
 },
 {
   "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
@@ -25,9 +31,27 @@
 },
 {
   "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
-  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\swap_chain.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\swap_chain.cpp",
-  "file": "C:/Users/xing5/projects/Project_Reset/src/swap_chain.cpp",
-  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/swap_chain.cpp.obj"
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\game_object.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\game_object.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/game_object.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/game_object.cpp.obj"
+},
+{
+  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\keyboard_movement_controller.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\keyboard_movement_controller.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/keyboard_movement_controller.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/keyboard_movement_controller.cpp.obj"
+},
+{
+  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\main.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\main.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/main.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/main.cpp.obj"
+},
+{
+  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\model.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\model.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/model.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/model.cpp.obj"
 },
 {
   "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
@@ -37,7 +61,37 @@
 },
 {
   "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
-  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-switch-default -o _deps\\glm-build\\glm\\CMakeFiles\\glm.dir\\detail\\glm.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\out\\build\\_deps\\glm-src\\glm\\detail\\glm.cpp",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\point_light_system.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\point_light_system.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/point_light_system.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/point_light_system.cpp.obj"
+},
+{
+  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\render_system.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\render_system.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/render_system.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/render_system.cpp.obj"
+},
+{
+  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\renderer.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\renderer.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/renderer.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/renderer.cpp.obj"
+},
+{
+  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\swap_chain.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\swap_chain.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/swap_chain.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/swap_chain.cpp.obj"
+},
+{
+  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/include -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glfw-src/include -isystem C:/VulkanSDK/1.4.335.0/include -O0 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -std=c++17 -o CMakeFiles\\Minecraft.dir\\src\\window.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\src\\window.cpp",
+  "file": "C:/Users/xing5/projects/Project_Reset/src/window.cpp",
+  "output": "C:/Users/xing5/projects/Project_Reset/out/build/CMakeFiles/Minecraft.dir/src/window.cpp.obj"
+},
+{
+  "directory": "C:/Users/xing5/projects/Project_Reset/out/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\clang++.exe -D_MBCS -IC:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src -O0 -std=c++14 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -g -Xclang -gcodeview -Wno-c++98-compat -Wno-c++98-compat-pedantic -Wno-switch-default -o _deps\\glm-build\\glm\\CMakeFiles\\glm.dir\\detail\\glm.cpp.obj -c C:\\Users\\xing5\\projects\\Project_Reset\\out\\build\\_deps\\glm-src\\glm\\detail\\glm.cpp",
   "file": "C:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-src/glm/detail/glm.cpp",
   "output": "C:/Users/xing5/projects/Project_Reset/out/build/_deps/glm-build/glm/CMakeFiles/glm.dir/detail/glm.cpp.obj"
 },

@@ -1,191 +1,142 @@
 #include <app.hpp>
+#include <keyboard_movement_controller.hpp>
+#include <buffer.hpp>
+#include <render_system.hpp>
+#include <point_light_system.hpp>
+#include <camera.hpp>
+#include <frame_info.hpp>
+#include <descriptors.hpp>
 
-#include <cstddef>
 #include <memory>
 #include <cassert>
-#include <stdexcept>
-#include <array>
+#include <chrono>
 
 namespace engine {
 
 App::App() {
-    createPipelineLayout();
-    recreateSwapChain();
-    createCommandBuffers();
+    globalPool = 
+        DescriptorPool::Builder(device)
+            .setMaxSets(SwapChain::MAX_FRAMES_IN_FLIGHT)
+            .addPoolSize(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, SwapChain::MAX_FRAMES_IN_FLIGHT)
+            .build();
+    loadGameObjects();
 }
 
-App::~App() {
-    vkDestroyPipelineLayout(device.getLogicalDevice(), pipelineLayout, nullptr);
-}
+App::~App() {}
 
 void App::run() {
-    mainLoop();
-    vkDeviceWaitIdle(device.getLogicalDevice());
-}
+    std::vector<std::unique_ptr<Buffer>> uboBuffers(SwapChain::MAX_FRAMES_IN_FLIGHT);
+    for (int i = 0; i < uboBuffers.size(); i++) {
+        uboBuffers[i] = std::make_unique<Buffer>(
+            device,
+            sizeof(GlobalUbo),
+            1,
+            VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT,
+            VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT);
+        uboBuffers[i]->map();
+    }
+    std::unique_ptr<DescriptorSetLayout> globalSetLayout = 
+        DescriptorSetLayout::Builder(device)
+            .addBinding(0, VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_ALL_GRAPHICS)
+            .build();
 
-void App::mainLoop() {
+    std::vector<VkDescriptorSet> globalDescriptorSets(SwapChain::MAX_FRAMES_IN_FLIGHT);
+    for (int i = 0; i < globalDescriptorSets.size(); i++) {
+        VkDescriptorBufferInfo bufferInfo = uboBuffers[i]->createDescriptorBufferInfo();
+        DescriptorWriter(*globalSetLayout, *globalPool)
+            .writeBuffer(0, &bufferInfo)
+            .build(globalDescriptorSets[i]);
+    }
+
+    RenderSystem renderSystem{
+        device,
+        renderer.getSwapChainRenderPass(),
+        globalSetLayout->getDescriptorSetLayout()
+    };
+
+    PointLightSystem pointLightSystem{
+        device,
+        renderer.getSwapChainRenderPass(),
+        globalSetLayout->getDescriptorSetLayout()
+    };
+    
+    Camera camera{};
+
+    GameObject viewerObject = GameObject::createGameObject();
+    viewerObject.transform.translation.z = -2.5f;
+    KeyboardMovementController cameraController{};
+
+    std::chrono::time_point currentTime = std::chrono::high_resolution_clock::now();
     while (!window.shouldClose()) {
         glfwPollEvents();
-        drawFrame();
-    }
-}
 
-void App::createCommandBuffers() {
-    commandBuffers.resize(swapChain->imageCount());
+        std::chrono::time_point newTime = std::chrono::high_resolution_clock::now();
+        float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
+        currentTime = newTime;
 
-    VkCommandBufferAllocateInfo allocInfo{};
-    allocInfo.sType                 = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    allocInfo.commandPool           = device.getCommandPool();
-    allocInfo.level                 = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocInfo.commandBufferCount    = static_cast<uint32_t>(commandBuffers.size());
+        cameraController.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject);
+        camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
-    if (vkAllocateCommandBuffers(device.getLogicalDevice(), &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to allocate command buffers!");
-    }
-}
+        float aspect = renderer.getAspectRatio();
+        camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 100.f);
 
-void App::freeCommandBuffers() {
-    vkFreeCommandBuffers(
-        device.getLogicalDevice(),
-        device.getCommandPool(),
-        static_cast<uint32_t>(commandBuffers.size()),
-        commandBuffers.data()
-    );
-    commandBuffers.clear();
-}
+        if (VkCommandBuffer commandBuffer = renderer.beginFrame()) {
+            int frameIndex = renderer.getFrameIndex();
+            FrameInfo frameInfo{
+                frameIndex,
+                frameTime,
+                commandBuffer,
+                camera,
+                globalDescriptorSets[frameIndex],
+                gameObjects
+            };
 
-void App::drawFrame() {
-    size_t currentFrame = swapChain->getCurrentFrame();
+            GlobalUbo ubo{};
+            ubo.projection = camera.getProjection();
+            ubo.view = camera.getView();
+            ubo.inverseView = camera.getInverseView();
+            pointLightSystem.update(frameInfo, ubo);
+            uboBuffers[frameIndex]->writeToBuffer(&ubo);
+            uboBuffers[frameIndex]->flush();
 
-    uint32_t imageIndex;
-    VkResult result = swapChain->acquireNextImage(&imageIndex);
+            renderer.beginSwapChainRenderPass(commandBuffer);
 
-    if (result == VK_ERROR_OUT_OF_DATE_KHR) {
-        recreateSwapChain();
-        return;
-    }
-    else if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR) {
-        throw std::runtime_error("Failed to acquire swap chain image!");
-    }
+            renderSystem.renderGameObjects(frameInfo);
+            pointLightSystem.render(frameInfo);
 
-    vkResetCommandBuffer(commandBuffers[currentFrame], 0);
-    recordCommandBuffer(imageIndex);
-
-    result = swapChain->submitCommandBuffers(&commandBuffers[currentFrame], &imageIndex);
-
-    if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window.wasWindowResized()) {
-        window.resetWindowResizedFlag();
-        recreateSwapChain();
-        return;
-    }
-    else if (result != VK_SUCCESS) {
-        throw std::runtime_error("Failed to present swap chain image!");
-    }
-}
-
-void App::recreateSwapChain() {
-    VkExtent2D extent = window.getExtent();
-    while (extent.width == 0 || extent.height == 0) {
-        extent = window.getExtent();
-        glfwWaitEvents();
-    }
-
-    vkDeviceWaitIdle(device.getLogicalDevice());
-
-    if (swapChain == nullptr) {
-        swapChain = std::make_unique<SwapChain>(device, extent);
-    }
-    else if (swapChain != nullptr) {
-        swapChain = std::make_unique<SwapChain>(device, extent, std::move(swapChain));
-        if (swapChain->imageCount() != commandBuffers.size()) {
-            freeCommandBuffers();
-            createCommandBuffers();
+            renderer.endSwapChainRenderPass(commandBuffer);
+            renderer.endFrame();
         }
     }
-    createPipeline();
+    vkDeviceWaitIdle(device.getLogicalDevice());
 }
 
-void App::createPipelineLayout() {
-    VkPipelineLayoutCreateInfo pipelineLayoutInfo{};
-    pipelineLayoutInfo.sType                    = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipelineLayoutInfo.setLayoutCount           = 0;        // Optional
-    pipelineLayoutInfo.pSetLayouts              = nullptr;  // Optional
-    pipelineLayoutInfo.pushConstantRangeCount   = 0;        // Optional
-    pipelineLayoutInfo.pPushConstantRanges      = nullptr;  // Optional
+void App::loadGameObjects() {
+    std::shared_ptr<Model> model = Model::createModelFromFile(device, "models/smooth_vase.obj");
+    GameObject smoothVase = GameObject::createGameObject();
+    smoothVase.model = model;
+    smoothVase.transform.translation = {.5f, .5f, 0.f};
+    smoothVase.transform.scale = {3.f, 1.5f, 3.f};
+    gameObjects.emplace(smoothVase.getId(), std::move(smoothVase));
 
-    if (vkCreatePipelineLayout(device.getLogicalDevice(), &pipelineLayoutInfo, nullptr, &pipelineLayout) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to create pipeline layout!");
-    }
-}
+    std::vector<glm::vec3> lightColors{
+        {1.f, .1f, .1f},
+        {.1f, .1f, 1.f},
+        {.1f, 1.f, .1f},
+        {1.f, 1.f, .1f},
+        {.1f, 1.f, 1.f},
+        {1.f, 1.f, 1.f}  //
+    };
 
-void App::createPipeline() {
-    assert(swapChain != nullptr && "Cannot create pipeline before swap chain");
-    assert(pipelineLayout != nullptr && "Cannot create pipeline before pipeline layout");
-
-    PipelineConfigInfo pipelineConfig{};
-    Pipeline::defaultPipelineConfigInfo(pipelineConfig);
-    
-    pipelineConfig.renderPass = swapChain->getRenderPass();
-    pipelineConfig.pipelineLayout = pipelineLayout;
-    pipeline = std::make_unique<Pipeline>(
-        device, 
-        "shaders/shader.vert.spv", 
-        "shaders/shader.frag.spv", 
-        pipelineConfig
-    );
-}
-
-void App::recordCommandBuffer(int imageIndex) {
-    size_t currentFrame = swapChain->getCurrentFrame();
-
-    VkCommandBufferBeginInfo beginInfo{};
-    beginInfo.sType             = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    beginInfo.flags             = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT; // Optional // Review
-    beginInfo.pInheritanceInfo  = nullptr; // Optional
-
-    if (vkBeginCommandBuffer(commandBuffers[currentFrame], &beginInfo) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to begin recording command buffer!");
-    }
-
-    VkRenderPassBeginInfo renderPassInfo{};
-    renderPassInfo.sType                = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
-    renderPassInfo.renderPass           = swapChain->getRenderPass();
-    renderPassInfo.framebuffer          = swapChain->getFrameBuffer(imageIndex);
-    renderPassInfo.renderArea.offset    = {0, 0};
-    renderPassInfo.renderArea.extent    = swapChain->getSwapChainExtent();
-
-    std::array<VkClearValue, 2> clearValues{};
-    clearValues[0].color            = {0.47f, 0.66f, 1.0f, 1.0f};
-    clearValues[1].depthStencil     = {1.0f, 0};
-    renderPassInfo.clearValueCount  = static_cast<uint32_t>(clearValues.size());
-    renderPassInfo.pClearValues     = clearValues.data();
-
-    vkCmdBeginRenderPass(commandBuffers[currentFrame], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
-
-    vkCmdBindPipeline(commandBuffers[currentFrame], VK_PIPELINE_BIND_POINT_GRAPHICS, pipeline->getGraphicsPipeline());
-
-    VkViewport viewport{};
-    viewport.x          = 0.0f;
-    viewport.y          = 0.0f;
-    viewport.width      = static_cast<float>(swapChain->getSwapChainExtent().width);
-    viewport.height     = static_cast<float>(swapChain->getSwapChainExtent().height);
-    viewport.minDepth   = 0.0f;
-    viewport.maxDepth   = 1.0f;
-    vkCmdSetViewport(commandBuffers[currentFrame], 0, 1, &viewport);
-
-    VkRect2D scissor{};
-    scissor.offset = {0, 0};
-    scissor.extent = swapChain->getSwapChainExtent();
-    vkCmdSetScissor(commandBuffers[currentFrame], 0, 1, &scissor);
-
-    // model->bind(commandBuffers[currentFrame]);
-    // model->draw(commandBuffers[currentFrame]);
-    vkCmdDraw(commandBuffers[currentFrame], 3, 1, 0, 0);
-
-    vkCmdEndRenderPass(commandBuffers[currentFrame]);
-
-    if (vkEndCommandBuffer(commandBuffers[currentFrame]) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to record command buffer!");
+    for (int i = 0; i < lightColors.size(); i++) {
+        GameObject pointLight = GameObject::makePointLight(0.2f);
+        pointLight.color = lightColors[i];
+        auto rotateLight = glm::rotate(
+            glm::mat4(1.f),
+            (i * glm::two_pi<float>()) / lightColors.size(),
+            {0.f, -1.f, 0.f});
+        pointLight.transform.translation = glm::vec3(rotateLight * glm::vec4(-1.f, -1.f, -1.f, 1.f));
+        gameObjects.emplace(pointLight.getId(), std::move(pointLight));
     }
 }
 

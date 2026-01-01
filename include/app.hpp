@@ -1,10 +1,11 @@
 #ifndef __APP_HPP__
 #define __APP_HPP__
 
+#include <descriptors.hpp>
 #include <window.hpp>
 #include <device.hpp>
-#include <swap_chain.hpp>
-#include <pipeline.hpp>
+#include <renderer.hpp>
+#include <game_object.hpp>
 
 #include <memory>
 #include <cstdint>
@@ -25,21 +26,15 @@ public:
 
     void run();
 private:
-    void mainLoop();
-    void createPipelineLayout();
-    void createPipeline();
-    void createCommandBuffers();
-    void freeCommandBuffers();
-    void drawFrame();
-    void recreateSwapChain();
-    void recordCommandBuffer(int imageIndex);
+    void loadGameObjects();
 
-    Window window{WIDTH, HEIGHT, "Hello Vulkan Window"};
+    Window window{WIDTH, HEIGHT, "Voxel Engine"};
     Device device{window};
-    std::unique_ptr<SwapChain> swapChain;
-    std::unique_ptr<Pipeline> pipeline;
-    VkPipelineLayout pipelineLayout;
-    std::vector<VkCommandBuffer> commandBuffers;
+    Renderer renderer{window, device};
+
+    // note: order of declarations matters
+    std::unique_ptr<DescriptorPool> globalPool{};
+    GameObject::Map gameObjects;
 };
 
 } // namespace engine

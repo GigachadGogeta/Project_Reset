@@ -10,9 +10,12 @@
 namespace engine {
 
 struct PipelineConfigInfo {
+    PipelineConfigInfo() = default;
     PipelineConfigInfo(const PipelineConfigInfo&) = delete;
     PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
 
+    std::vector<VkVertexInputBindingDescription> bindingDescriptions{};
+    std::vector<VkVertexInputAttributeDescription> attributeDescriptions{};
     VkPipelineViewportStateCreateInfo viewportInfo{};
     VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo{};
     VkPipelineRasterizationStateCreateInfo rasterizationInfo{};
@@ -24,7 +27,7 @@ struct PipelineConfigInfo {
     VkPipelineDynamicStateCreateInfo dynamicStateInfo{};
     VkPipelineLayout pipelineLayout = nullptr;
     VkRenderPass renderPass = nullptr;
-    uint32_t subpass = 0;
+    uint32_t subpass {0};
 };
 
 class Pipeline {
@@ -37,7 +40,10 @@ public:
     Pipeline(const Pipeline&) = delete;
     Pipeline& operator=(const Pipeline&) = delete;
 
+    void bind(VkCommandBuffer commandBuffer);
+
     static void defaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
+    static void enableAlphaBlending(PipelineConfigInfo& configInfo); // TODO
 
     VkPipeline getGraphicsPipeline() { return graphicsPipeline; }
 private:
