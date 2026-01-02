@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include <cstdint>
+#include <iostream>
 
 namespace engine {
 
@@ -10,6 +11,14 @@ void Window::framebufferResizedCallback(GLFWwindow *glfwWindow, int width, int h
     window->framebufferResized = true;
     window->width = width;
     window->height = height;
+}
+
+void Window::cursor_position_callback(GLFWwindow* glfwWindow, double xpos, double ypos) {
+    Window* window = reinterpret_cast<Window*>(glfwGetWindowUserPointer(glfwWindow));
+    window->cursorX = xpos;
+    window->cursorY = ypos;
+
+    // std::cout << "Cursor POS: (" << xpos << ", " << ypos << ")\n";
 }
 
 Window::Window(uint32_t w, uint32_t h, std::string name) : width{w}, height{h}, windowName{name} {
@@ -31,6 +40,11 @@ void Window::initWindow() {
 
     glfwSetWindowUserPointer(window, this);
     glfwSetFramebufferSizeCallback(window, framebufferResizedCallback);
+
+    glfwSetCursorPosCallback(window, cursor_position_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    if (glfwRawMouseMotionSupported())
+    glfwSetInputMode(window, GLFW_RAW_MOUSE_MOTION, GLFW_TRUE);
 }
 
 void Window::createSurface(VkInstance& instance, VkSurfaceKHR& surface) {

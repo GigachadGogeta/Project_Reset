@@ -67,6 +67,10 @@ void App::run() {
     KeyboardMovementController cameraController{};
 
     std::chrono::time_point currentTime = std::chrono::high_resolution_clock::now();
+
+    double lastMouseX = window.getCursorX();
+    double lastMouseY = window.getCursorY();
+
     while (!window.shouldClose()) {
         glfwPollEvents();
 
@@ -74,7 +78,19 @@ void App::run() {
         float frameTime = std::chrono::duration<float, std::chrono::seconds::period>(newTime - currentTime).count();
         currentTime = newTime;
 
-        cameraController.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject);
+        // Get current mouse position
+        double mouseX = window.getCursorX();
+        double mouseY = window.getCursorY();
+
+        // Calculate delta (change) from last frame
+        float cursor_dx = static_cast<float>(mouseX - lastMouseX);
+        float cursor_dy = static_cast<float>(mouseY - lastMouseY);
+
+        // Update last position for next frame
+        lastMouseX = mouseX;
+        lastMouseY = mouseY;
+
+        cameraController.moveInPlaneXZ(window.getGLFWwindow(), frameTime, viewerObject, cursor_dx, cursor_dy);
         camera.setViewYXZ(viewerObject.transform.translation, viewerObject.transform.rotation);
 
         float aspect = renderer.getAspectRatio();
@@ -91,16 +107,19 @@ void App::run() {
                 gameObjects
             };
 
+            // update
             GlobalUbo ubo{};
-            ubo.projection = camera.getProjection();
-            ubo.view = camera.getView();
+            ubo.projection  = camera.getProjection();
+            ubo.view        = camera.getView();
             ubo.inverseView = camera.getInverseView();
             pointLightSystem.update(frameInfo, ubo);
             uboBuffers[frameIndex]->writeToBuffer(&ubo);
             uboBuffers[frameIndex]->flush();
 
+            // render
             renderer.beginSwapChainRenderPass(commandBuffer);
 
+            // order here matters
             renderSystem.renderGameObjects(frameInfo);
             pointLightSystem.render(frameInfo);
 
@@ -117,19 +136,35 @@ void App::loadGameObjects() {
     smoothVase.model = model;
     smoothVase.transform.translation = {.5f, .5f, 0.f};
     smoothVase.transform.scale = {3.f, 1.5f, 3.f};
+
+    smoothVase.transform.rotation = {
+        glm::mod(smoothVase.transform.rotation.x + 0.0f, glm::two_pi<float>()),
+        glm::mod(smoothVase.transform.rotation.y + 0.0f, glm::two_pi<float>()),
+        glm::mod(smoothVase.transform.rotation.z + 0.001f, glm::two_pi<float>()),
+    };
+
     gameObjects.emplace(smoothVase.getId(), std::move(smoothVase));
 
+    model = Model::createModelFromFile(device, "models/colored_cube.obj");
+    GameObject cube = GameObject::createGameObject();
+    cube.model = model;
+    cube.transform.translation = {-4.f, -4.f, 4.f};
+    cube.transform.scale = {1.f, 1.f, 1.f};
+
+    cube.transform.rotation = {
+        glm::mod(cube.transform.rotation.x + 0.0f, glm::two_pi<float>()),
+        glm::mod(cube.transform.rotation.y + 0.0f, glm::two_pi<float>()),
+        glm::mod(cube.transform.rotation.z + 0.001f, glm::two_pi<float>()),
+    };
+
+    gameObjects.emplace(cube.getId(), std::move(cube));
+
     std::vector<glm::vec3> lightColors{
-        {1.f, .1f, .1f},
-        {.1f, .1f, 1.f},
-        {.1f, 1.f, .1f},
-        {1.f, 1.f, .1f},
-        {.1f, 1.f, 1.f},
-        {1.f, 1.f, 1.f}  //
+        {1.f, 1.f, 1.f},
     };
 
     for (int i = 0; i < lightColors.size(); i++) {
-        GameObject pointLight = GameObject::makePointLight(0.2f);
+        GameObject pointLight = GameObject::makePointLight(1.f, 1.f);
         pointLight.color = lightColors[i];
         auto rotateLight = glm::rotate(
             glm::mat4(1.f),

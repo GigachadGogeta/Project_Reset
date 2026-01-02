@@ -138,7 +138,7 @@ void Pipeline::defaultPipelineConfigInfo(PipelineConfigInfo& configInfo) {
     configInfo.rasterizationInfo.rasterizerDiscardEnable    = VK_FALSE;
     configInfo.rasterizationInfo.polygonMode                = VK_POLYGON_MODE_FILL;
     configInfo.rasterizationInfo.lineWidth                  = 1.0f;
-    configInfo.rasterizationInfo.cullMode                   = VK_CULL_MODE_NONE; // Optimization option
+    configInfo.rasterizationInfo.cullMode                   = VK_CULL_MODE_FRONT_BIT; // Optimization option
     configInfo.rasterizationInfo.frontFace                  = VK_FRONT_FACE_CLOCKWISE;
     configInfo.rasterizationInfo.depthBiasEnable            = VK_FALSE; // Optional: Used for shadow mapping
     configInfo.rasterizationInfo.depthBiasConstantFactor    = 0.0f; // Optional
