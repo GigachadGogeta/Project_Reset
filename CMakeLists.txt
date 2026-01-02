@@ -84,6 +84,14 @@ set(MODELS_DEST_DIR "${CMAKE_CURRENT_BINARY_DIR}/models")
 add_custom_command(
     TARGET ${PROJECT_NAME}
     POST_BUILD
+    COMMAND cmd /c "${CMAKE_CURRENT_SOURCE_DIR}/compile_shaders.bat"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    COMMENT "Executing post-build batch script to compile shaders..."
+)
+
+add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     "${SHADERS_SOURCE_DIR}"
     "${SHADERS_DEST_DIR}"
